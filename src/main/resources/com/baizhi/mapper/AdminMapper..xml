@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.AdminDao">
+    <!--添加用户-->
+    <insert id="insert" parameterType="com.baizhi.entity.Admin">
+        insert into t_admin values(#{id},#{name},#{password},#{salt})
+    </insert>
+    <!--根据用户名和密码查询管理员-->
+    <select id="query" resultType="com.baizhi.entity.Admin">
+        select id ,name,password,salt from t_admin
+        where name=#{0} and password=#{1}
+    </select>
+
+    <!--根据用户名查询-->
+<select id="queryName" resultType="com.baizhi.entity.Admin">
+    select id,name,password,salt from t_admin
+    where name=#{name}
+</select>
+    <!--根据id查询一名管理员-->
+    <select id="queryone" resultType="com.baizhi.entity.Admin">
+        select id,name,password,salt from t_admin where username=#{id}
+    </select>
+
+    <!--修改用户密码-->
+    <update id="update" parameterType="com.baizhi.entity.Admin">
+          update t_admin set password=#{password},salt=#{salt}
+          where id=#{id}
+    </update>
+</mapper>

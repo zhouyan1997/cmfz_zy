@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.AlbumDao">
+    <resultMap id="albumMap" type="com.baizhi.entity.Album">
+        <id property="id" column="id" />
+        <result property="title" column="title"/>
+        <result property="publishDate" column="publishDate"/>
+        <result property="coverImg" column="coverImg"/>
+        <result property="count" column="count"/>
+        <result property="score" column="score"/>
+        <result property="author" column="author"/>
+        <result property="broadCast" column="broadCast"/>
+        <result property="brief" column="brief"/>
+        <result property="status" column="status"/>
+        <collection property="children" ofType="com.baizhi.entity.Chapter">
+            <id column="c_id" property="id"/>
+            <result property="title" column="c_title"/>
+            <result property="size" column="c_size"/>
+            <result property="number" column="c_number"/>
+            <result property="duration" column="c_duration"/>
+            <result property="downPath" column="c_downPath"/>
+            <result property="uploadTime" column="c_uploadTime"/>
+        </collection>
+    </resultMap>
+   
+    <!--添加专辑-->
+    <insert id="insert" parameterType="com.baizhi.entity.Album">
+        insert into t_album values(#{id},#{title},#{publishDate},#{coverImg},#{counts},#{score},#{author},#{broadCast},#{brief},#{status})
+    </insert>
+
+    <!--分页查询专辑信息-->
+    <select id="findBypage" resultMap="albumMap">
+      select a.id,a.title,a.publishDate,a.coverImg,a.counts,a.score,a.author,a.broadCast,a.brief,a.status,
+        c.id as c_id,c.title as c_title,c.size as c_size,c.number as c_number,c.duration as c_duration,
+        c.downPath as c_downPath,c.uploadTime as c_uploadTime,c.album_id as c_cid
+      from t_album a
+      left join t_chapter c
+      on a.id=c.album_id
+      limit #{start},#{rows}
+    </select>
+
+    <!--查询全部的专辑-->
+    <select id="queryAll" resultType="com.baizhi.entity.Album">
+        select id,title,publishDate,coverImg,counts,score,author,broadCast,brief,status
+        from t_album
+    </select>
+
+    <!--查询总条数-->
+    <select id="findTotals" resultType="long">
+      select count(id) from t_album
+    </select>
+
+    <!--根据id 查询一条数据-->
+    <select id="queryone" resultType="com.baizhi.entity.Album">
+      select id,title,publishDate,coverImg,counts,score,author,broadCast,brief,status
+      from t_album
+      where id=#{id}
+    </select>
+
+    <!-- 根据id删除专辑信息-->
+    <delete id="delete" parameterType="com.baizhi.entity.Album">
+        delete from t_album where id=#{id}
+    </delete>
+
+    <!--根据数组删除多张专辑-->
+    <delete id="deleteAll" parameterType="com.baizhi.entity.Album">
+        delete from t_album where id in
+        <foreach collection="array" open="(" item="ids" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--修改专辑-->
+    <update id="update" parameterType="com.baizhi.entity.Album">
+      update t_article set id=#{id},title=#{title},publishDate=#{publishDate},coverImg=#{coverImg},counts=#{counts},score=#{score},author=#{author},broadCast=#{broadCast},brief=#{brief},status=#{status}
+      where id=#{id}
+</update>
+
+</mapper>

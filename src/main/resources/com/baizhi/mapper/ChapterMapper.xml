@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ChapterDao">
+    <!--添加专辑-->
+    <insert id="insert" parameterType="com.baizhi.entity.Chapter">
+        insert into t_chapter values(#{id},#{title},#{size},#{number},#{duration},#{downPath},#{uploadTime},#{album_id})
+</insert>
+    <!--分页查询章节信息-->
+    <select id="findBypage" resultType="com.baizhi.entity.Chapter">
+        select id,title,size,number,duration,downPath,uploadTime,album_id
+        from t_chapter
+        limit #{start},#{rows}
+    </select>
+    <!--查询章节信息-->
+    <select id="queryAll" resultType="com.baizhi.entity.Chapter">
+      select id,title,size,number,duration,downPath,uploadTime,album_id
+      from t_chapter
+    </select>
+    <!--根据id 查询一条数据-->
+    <select id="queryone" resultType="com.baizhi.entity.Chapter">
+      select id,title,size,number,duration,downPath,uploadTime,album_id
+      from t_chapter
+      where id=#{id}
+    </select>
+
+    <!-- 根据id删除文章信息-->
+    <delete id="delete" parameterType="com.baizhi.entity.Chapter">
+        delete from t_album where id=#{id}
+    </delete>
+
+    <!--根据数组删除多条数据-->
+    <delete id="deleteAll" parameterType="com.baizhi.entity.Chapter">
+        delete from t_chapter where id in
+        <foreach collection="array" open="(" item="ids" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--修改文章数据-->
+    <update id="update" parameterType="com.baizhi.entity.Chapter">
+      update t_chapter set id=#{id},title=#{title},size=#{size},number=#{number},duration=#{duration},downPath=#{downPath},uploadTime=#{uploadTime},album_id=#{album_id}
+      where id=#{id}
+</update>
+
+    <!--查询总条数-->
+    <select id="findTotals" resultType="long">
+      select count(id) from t_chapter
+    </select>
+</mapper>

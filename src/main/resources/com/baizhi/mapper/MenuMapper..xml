@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.MenuDao">
+    <resultMap id="menuMap" type="com.baizhi.entity.Menu">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="iconCls" column="iconCls"/>
+        <result property="href" column="href"/>
+        <collection property="menus" ofType="com.baizhi.entity.Menu">
+            <id property="id" column="m_id"/>
+            <result property="name" column="m_name"/>
+            <result property="iconCls" column="m_iconCls"/>
+            <result property="href" column="m_href"/>
+        </collection>
+    </resultMap>
+    <!--添加-->
+    <insert id="insert" parameterType="com.baizhi.entity.Menu">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select LAST_INSERT_ID()
+        </selectKey>
+        insert into t_menu values(#{id},#{name},#{iconCls},#{href},#{parent_id})
+    </insert>
+    <!--查询-->
+    <select id="queryAll" resultMap="menuMap">
+      select f.id,f.name,f.iconCls,f.href,
+      m.id as m_id,m.name as m_name,m.iconCls as m_iconCls,m.href as m_href,m.parent_id as m_fid
+      from t_menu f
+      inner join t_menu m
+			on f.id=m.parent_id
+    </select>
+    <!-- 删除 -->
+    <delete id="delete" parameterType="com.baizhi.entity.Menu">
+        delete from t_menu where id=#{id}
+    </delete>
+    <!--修改-->
+    <update id="update" parameterType="com.baizhi.entity.Menu">
+        update t_menu set id=#{id},name=#{name},iconCls=#{iconCls},href=#{href},parent_id=#{parent_id}
+        where id=#{id}
+</update>
+</mapper>

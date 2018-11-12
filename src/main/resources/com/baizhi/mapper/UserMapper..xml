@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserDao">
+    <!--添加用户-->
+    <insert id="insert" parameterType="com.baizhi.entity.User">
+        insert into t_user values(#{id},#{phone},#{username},#{password},#{salt},#{headPic},#{nickName},#{gender},#{home},#{sign},#{province},#{city},#{status},#{date})
+    </insert>
+
+    <!--分页查询用户信息-->
+    <select id="findBypage" resultType="com.baizhi.entity.User">
+      select * from t_user limit #{start},#{rows}
+    </select>
+
+    <!--查询总条数-->
+    <select id="findTotals" resultType="long">
+      select count(id) from t_user
+    </select>
+
+    <!--根据id 查询一个用户-->
+    <select id="queryone" resultType="com.baizhi.entity.User">
+      select id,phone,username,password,salt,headPic,nickName,gender,home,sign,province,city,status,date
+      from t_user
+      where id=#{id}
+    </select>
+
+    <!--根据phone和password查询用户-->
+    <select id="queryByPhone" resultType="com.baizhi.entity.User">
+       select id,phone,username,password,salt,headPic,nickName,gender,home,sign,province,city,status,date
+        from t_user
+        where phone=#{0} and password=#{1}
+    </select>
+
+    <!-- 根据id删除用户信息-->
+    <delete id="delete" parameterType="com.baizhi.entity.User">
+        delete from t_user where id=#{id}
+    </delete>
+
+    <!--根据数组删除多个用户-->
+    <delete id="deleteAll" parameterType="com.baizhi.entity.User">
+        delete from t_banner where id in
+        <foreach collection="array" open="(" item="ids" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--修改用户-->
+    <update id="update" parameterType="com.baizhi.entity.User">
+      update t_user set id=#{id},phone=#{phone},username=#{username},password=#{password},salt=#{salt},headPic=#{headPic},nickName=#{nickName},gender=#{gender},home=#{home},sign=#{sign},province=#{province},city=#{city},status=#{status},date=#{date}
+      where id=#{id}
+</update>
+</mapper>

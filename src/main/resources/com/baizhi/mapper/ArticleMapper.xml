@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ArticleDao">
+    <resultMap id="articleuMap" type="com.baizhi.entity.Article">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="imgPath" column="imgPath"/>
+        <result property="content" column="content"/>
+        <result property="publishDate" column="publishDate"/>
+        <result property="status" column="status"/>
+       <association property="guru" javaType="com.baizhi.entity.Guru">
+           <id property="id" column="guru_id"/>
+           <result property="name" column="name"/>
+           <result property="headPic" column="headPic"/>
+           <result property="gender" column="gender"/>
+       </association>
+    </resultMap>
+    <!--添加用户-->
+    <insert id="insert" parameterType="com.baizhi.entity.Article">
+        insert into t_article values(#{id},#{title},#{imgPath},#{content},#{publishDate},#{guru_id},#{status})
+    </insert>
+    <!--分页查询用户信息-->
+    <select id="findBypage" resultMap="articleuMap">
+      select a.id,a.title,a.imgPath,a.content,a.publishDate,a.status,
+        g.id as guru_id,g.name as name,g.headPic as headPic,g.gender as gender
+      from t_article a
+      inner join t_guru g
+      on a.guru_id=g.id
+      limit #{start},#{rows}
+
+    </select>
+    <!--查询总条数-->
+    <select id="findTotals" resultType="long">
+      select count(id) from t_article
+    </select>
+    <!--根据id 查询一条数据-->
+    <select id="queryone" resultType="com.baizhi.entity.Article">
+      select id,title,imgPath,content,publishDate,guru_id,status
+      from t_article
+      where id=#{id}
+    </select>
+    <!--查询全部数据-->
+    <select id="queryAll" resultType="com.baizhi.entity.Article">
+        select id,title,imgPath,content,publishDate,guru_id,status
+        from t_article
+
+    </select>
+    <!-- 根据id删除用户信息-->
+    <delete id="delete" parameterType="com.baizhi.entity.Article">
+        delete from t_article where id=#{id}
+    </delete>
+
+    <!--根据数组删除多条数据-->
+    <delete id="deleteAll" parameterType="com.baizhi.entity.Article">
+        delete from t_article where id in
+        <foreach collection="array" open="(" item="ids" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--修改数据-->
+    <update id="update" parameterType="com.baizhi.entity.Article">
+      update t_article set id=#{id},title=#{title},imgPath=#{imgPath},content=#{content},publishDate=#{publishDate},guru_id=#{guru_id},status=#{status}
+      where id=#{id}
+</update>
+</mapper>

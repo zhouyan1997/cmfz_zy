@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.BannerDao">
+    <!--添加-->
+    <insert id="insert" parameterType="com.baizhi.entity.Banner">
+        insert into t_banner values(#{id},#{title},#{imgPath},#{decs},#{status},#{date})
+    </insert>
+    <!--分页查询-->
+    <select id="findBypage" resultType="com.baizhi.entity.Banner">
+      select * from t_banner limit #{start},#{rows}
+    </select>
+    <!--查询总条数-->
+    <select id="findTotals" resultType="long">
+      select count(id) from t_banner
+    </select>
+    <!--根据id 查询一条数据-->
+    <select id="queryone" resultType="com.baizhi.entity.Banner">
+      select id,title,imgPath,decs,status,date from t_banner
+      where id=#{id}
+    </select>
+
+    <!-- 删除图片 -->
+    <delete id="delete" parameterType="com.baizhi.entity.Banner">
+        delete from t_banner where id=#{id}
+    </delete>
+
+    <!--根据数组删除多条数据-->
+    <delete id="deleteAll" parameterType="com.baizhi.entity.Banner">
+        delete from t_banner where id in
+        <foreach collection="array" open="(" item="ids" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <!--修改数据-->
+    <update id="update" parameterType="com.baizhi.entity.Banner">
+      update t_banner set id=#{id},title=#{title},imgPath=#{imgPath},decs=#{decs},status=#{status},date=#{date}
+      where id=#{id}
+    </update>
+
+</mapper>
